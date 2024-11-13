@@ -1,6 +1,7 @@
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Scanner;
 
@@ -9,10 +10,59 @@ public class Proj3 {
     // Merge Sort
     public static <T extends Comparable> void mergeSort(ArrayList<T> a, int left, int right) {
         // TODO: Finish Me
+        int difference;
+        int mid;
+
+        difference = right - left;
+        mid = (difference / 2) + left;
+
+        if(difference != 0) {
+            mergeSort(a, left, mid);
+            mergeSort(a, mid + 1, right);
+        }
+
+        merge(a, left, mid, right);
     }
 
     public static <T extends Comparable> void merge(ArrayList<T> a, int left, int mid, int right) {
         // TODO: Finish Me
+        // create two partitions
+        ArrayList<T> leftArray = new ArrayList<>();
+        ArrayList<T> rightArray = new ArrayList<>();
+
+        // if no sorting is needed
+        if(left == right) return;
+
+        // copy values into leftArray
+        for(int i = left; i < mid + 1; i++) {
+            leftArray.add(a.get(i));
+        }
+
+        // copy values into rightArray
+        for(int i = mid + 1; i < right + 1; i++) {
+            rightArray.add(a.get(i));
+        }
+
+        // compare values of leftArray and rightArray, insert into a
+        for(int i = left; i < right + 1; i++) {
+
+            // if there is no value in leftArray
+            if(leftArray.isEmpty()) {
+                a.set(i, rightArray.remove(0));
+
+            // if there is no value in rightArray
+            } else if(rightArray.isEmpty()) {
+                a.set(i, leftArray.remove(0));
+
+            // normal comparison
+            } else {
+                if(rightArray.get(0).compareTo(leftArray.get(0)) >= 0) {
+                    a.set(i, rightArray.remove(0));
+                } else {
+                    a.set(i, leftArray.remove(0));
+                }
+            }
+        }
     }
 
     // Quick Sort
@@ -35,61 +85,12 @@ public class Proj3 {
     // Heap Sort
     public static <T extends Comparable> void heapSort(ArrayList<T> a, int left, int right) {
         // TODO: Finish Me
-        heapify(a, left, right);
 
-        // TODO: deleteMax until array is sorted, somehow make duplicate array do deal with this
     }
 
     public static <T extends Comparable> void heapify (ArrayList<T> a, int left, int right) {
         // TODO: Finish Me
-        int startIndex = left;
-        int index;
-        int lChild;
-        int rChild;
-        int largestChildIndex;
 
-        // find index to start
-        while((startIndex * 2) + 1 < (right)) {
-            startIndex = (startIndex * 2) + 1;
-        }
-
-        while(startIndex * 2 > right) {
-            startIndex--;
-        }
-
-        // repeated percolate down
-        for(int i = startIndex; i > left - 1; i--) {
-            index = i;
-            lChild = index * 2;
-
-            // while has children
-            while(lChild < right) {
-                lChild = index * 2;
-                rChild = (index * 2) + 1;
-
-                // find largest child
-                if(rChild < right) {
-                    if(a.get(lChild).compareTo(a.get(rChild)) > 0) {
-                        largestChildIndex = lChild;
-                    } else {
-                        largestChildIndex = rChild;
-                    }
-                } else {
-                    largestChildIndex = lChild;
-                }
-
-                // compare largest child and parent
-                if(a.get(largestChildIndex).compareTo(a.get(index)) > 0) {
-                    // swap if necessary
-                    swap(a, index, largestChildIndex);
-                    index = largestChildIndex;
-
-                    // if swap not necessary, break
-                } else {
-                    break;
-                }
-            }
-        }
 
     }
 
@@ -155,6 +156,8 @@ public class Proj3 {
     }
 
     public static void main(String [] args)  throws IOException {
+        // TODO: remove test code
+
         ArrayList<Catcher> listToSort;
         long startTime;
         long endTime;
@@ -163,7 +166,12 @@ public class Proj3 {
         int linesToRead;
         int swapCount;
 
+        boolean testBoolean = true;
+        ArrayList<Catcher> testList;
+
         listToSort  = new ArrayList<>();
+
+        testList = new ArrayList<>();
 
 
         // check for correct args count
@@ -192,7 +200,10 @@ public class Proj3 {
             listToSort.add(new Catcher(inputFileNameScanner.nextLine()));
         }
 
+        testList = (ArrayList<Catcher>) listToSort.clone();
+
         // test line
+        Collections.sort(testList, Collections.reverseOrder());
         System.out.println(listToSort.toString());
 
         Collections.shuffle(listToSort);
@@ -203,9 +214,25 @@ public class Proj3 {
         System.out.print(swapCount + " swaps, ");
         System.out.println(listToSort.toString());
 
+        Collections.shuffle(listToSort);
+
         swapCount = transpositionSort(listToSort, linesToRead);
 
         System.out.print(swapCount + " swaps, ");
         System.out.println(listToSort.toString());
+
+        Collections.shuffle(listToSort);
+
+        mergeSort(listToSort, 0, listToSort.size() - 1);
+
+        System.out.println(listToSort.toString());
+
+        for(int i = 0; i < listToSort.size(); i++) {
+            if(listToSort.get(i).compareTo(testList.get(i)) != 0) {
+                testBoolean = false;
+                System.out.println("Breaks at " + listToSort.get(i).toString() + ", index " + i);
+            }
+        }
+        System.out.println("Sort works: " + testBoolean);
     }
 }
