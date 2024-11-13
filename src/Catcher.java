@@ -121,7 +121,7 @@ public class Catcher implements Comparable<Catcher> {
         result = skill - c.getSkill();
 
         if(result == 0) {
-            result = username.compareTo(c.getUsername());
+            result = c.getUsername().compareTo(username);
         }
 
         return result;
