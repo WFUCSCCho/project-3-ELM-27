@@ -95,18 +95,25 @@ Using your favorite graphing software (e.g., MS Excel or Google Sheets), plot th
 vs. N for each case. Take a screenshot of your graph and put them here by modifying this file, committing, and pushing 
 it to this repository.
 
+## DISCLAIMER: Sets are sorted in descending order, since this makes more sense for sorting player rankings.
+
 Bubble Sort, Merge Sort, Quick Sort, and Heap Sort running time (already sorted):
-![image](https://github.com/user-attachments/assets/76f103c8-8c02-4bec-9966-99568f2effb6)
+![chart-1731576422567.png](chart-1731576422567.png)
 
 Bubble Sort, Merge Sort, Quick Sort, and Heap Sort running time (shuffled):
+![chart-1731576533302.png](chart-1731576533302.png)
 
 Bubble Sort, Merge Sort, Quick Sort, and Heap Sort running time (reversed):
+![chart-1731576698759.png](chart-1731576698759.png)
 
 Bubble Sort and Odd-Even Transposition Sort comparison (already sorted):
+![chart-1731574285897.png](chart-1731574285897.png)
 
 Bubble Sort and Odd-Even Transposition Sort comparison (shuffled):
+![chart-1731574454824.png](chart-1731574454824.png)
 
 Bubble Sort and Odd-Even Transposition Sort comparison (reversed):
+![chart-1731574555903.png](chart-1731574555903.png)
 
 ## Submission:
 

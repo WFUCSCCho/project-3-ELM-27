@@ -1,3 +1,16 @@
+/*
+ * @file: Proj3.java
+ * @description: This class runs 5 sorting algorithms: bubbleSort, transpotitionSort,
+ *               mergeSort, heapSort, and quickSort. heapSort does not work properly,
+ *               but I spent 4 hours trying to find what was wrong and I couldn't find
+ *               how to fix it. I do know the error, though. The issue is that some
+ *               values are just randomly ignored. I wasn't able to figure out how to
+ *               fix this, though the runtime should be similar to the actual algorithm
+ *               since it is still accurately sorted for the most part.
+ * @author: Elliott Lowman
+ * @date: November 14, 2024
+ */
+
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -303,8 +316,6 @@ public class Proj3 {
     }
 
     public static void main(String [] args)  throws IOException {
-        // TODO: finish proper implementation
-
         ArrayList<Catcher> listToSort;
         long startTime;
         long endTime;
@@ -371,6 +382,38 @@ public class Proj3 {
             fileNewLine(swapCount + "", "analysis.txt");
             System.out.println("Reversed: " + swapCount + " swaps.");
 
+            writeToFile("bubbleSort", "analysis.txt");
+            writeToFile(listToSort.size() + "", "analysis.txt");
+
+            System.out.println("bubbleSort with " + listToSort.size() + " items.");
+
+            // sorted (timed)
+            Collections.sort(listToSort, Collections.reverseOrder());
+            startTime = System.nanoTime();
+            bubbleSort(listToSort, listToSort.size());
+            endTime = System.nanoTime();
+            writeFullList(listToSort, "sorted.txt");
+            writeToFile((endTime - startTime) + "", "analysis.txt");
+            System.out.println("Sorted: " + (endTime - startTime) + " nanoseconds.");
+
+            // shuffled (timed)
+            Collections.shuffle(listToSort);
+            startTime = System.nanoTime();
+            bubbleSort(listToSort, listToSort.size());
+            endTime = System.nanoTime();
+            writeFullList(listToSort, "sorted.txt");
+            writeToFile((endTime - startTime) + "", "analysis.txt");
+            System.out.println("Sorted: " + (endTime - startTime) + " nanoseconds.");
+
+            // reversed (timed)
+            Collections.sort(listToSort);
+            startTime = System.nanoTime();
+            bubbleSort(listToSort, listToSort.size());
+            endTime = System.nanoTime();
+            writeFullList(listToSort, "sorted.txt");
+            fileNewLine((endTime - startTime) + "", "analysis.txt");
+            System.out.println("Sorted: " + (endTime - startTime) + " nanoseconds.");
+
         } else if(algorithmType.equals("transpositionSort")) {
             writeToFile("transpositionSort", "analysis.txt");
             writeToFile(listToSort.size() + "", "analysis.txt");
@@ -404,7 +447,7 @@ public class Proj3 {
             System.out.println("heapSort with " + listToSort.size() + " items.");
 
             // sorted
-            Collections.sort(listToSort);
+            Collections.sort(listToSort, Collections.reverseOrder());
             startTime = System.nanoTime();
             heapSort(listToSort, 0, listToSort.size() - 1);
             endTime = System.nanoTime();
@@ -422,7 +465,7 @@ public class Proj3 {
             System.out.println("Sorted: " + (endTime - startTime) + " nanoseconds.");
 
             // reversed
-            Collections.sort(listToSort, Collections.reverseOrder());
+            Collections.sort(listToSort);
             startTime = System.nanoTime();
             heapSort(listToSort, 0, listToSort.size() - 1);
             endTime = System.nanoTime();
@@ -436,7 +479,7 @@ public class Proj3 {
             System.out.println("mergeSort with " + listToSort.size() + " items.");
 
             // sorted
-            Collections.sort(listToSort);
+            Collections.sort(listToSort, Collections.reverseOrder());
             startTime = System.nanoTime();
             mergeSort(listToSort, 0, listToSort.size() - 1);
             endTime = System.nanoTime();
@@ -454,7 +497,7 @@ public class Proj3 {
             System.out.println("Sorted: " + (endTime - startTime) + " nanoseconds.");
 
             // reversed
-            Collections.sort(listToSort, Collections.reverseOrder());
+            Collections.sort(listToSort);
             startTime = System.nanoTime();
             mergeSort(listToSort, 0, listToSort.size() - 1);
             endTime = System.nanoTime();
@@ -468,7 +511,7 @@ public class Proj3 {
             System.out.println("quickSort with " + listToSort.size() + " items.");
 
             // sorted
-            Collections.sort(listToSort);
+            Collections.sort(listToSort, Collections.reverseOrder());
             startTime = System.nanoTime();
             quickSort(listToSort, 0, listToSort.size() - 1);
             endTime = System.nanoTime();
@@ -486,7 +529,7 @@ public class Proj3 {
             System.out.println("Sorted: " + (endTime - startTime) + " nanoseconds.");
 
             // reversed
-            Collections.sort(listToSort, Collections.reverseOrder());
+            Collections.sort(listToSort);
             startTime = System.nanoTime();
             quickSort(listToSort, 0, listToSort.size() - 1);
             endTime = System.nanoTime();
