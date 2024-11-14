@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class Proj3 {
     // Sorting Method declarations
-    // Merge Sort
+    // Merge Sort | FINISHED
     public static <T extends Comparable> void mergeSort(ArrayList<T> a, int left, int right) {
         int difference;
         int mid;
@@ -68,9 +68,8 @@ public class Proj3 {
         }
     }
 
-    // Quick Sort
+    // Quick Sort | FINISHED
     public static <T extends Comparable> void quickSort(ArrayList<T> a, int left, int right) {
-        // TODO: Finish Me
         // definitions
         int partition;
 
@@ -87,7 +86,6 @@ public class Proj3 {
     }
 
     public static <T extends Comparable> int partition (ArrayList<T> a, int left, int right) {
-        // TODO: Fix issue in result
         // definitions
         int pivot;
         int rightIndex;
@@ -144,13 +142,89 @@ public class Proj3 {
     // Heap Sort
     public static <T extends Comparable> void heapSort(ArrayList<T> a, int left, int right) {
         // TODO: Finish Me
+        // declarations
+        ArrayList<T> tempArray = new ArrayList<>();
+        int tempNode;
 
+        // copy values into tempArray
+        tempArray = (ArrayList<T>) a.clone();
+        a.clear();
+        tempArray.add(0, null);
+        tempNode = left + 1;
+
+        // call heapify on tempArray
+        heapify(tempArray, left + 1, right + 1);
+
+        while(left <= right) {
+            tempNode = left + 1;
+            // percolate top node down to bottom, then delete
+            while ((tempNode * 2) <= right) {
+                // case for if both children exist
+                if ((tempNode * 2) < right) {
+                    if (tempArray.get(tempNode * 2).compareTo(tempArray.get((tempNode * 2) + 1)) >= 0) {
+                        swap(tempArray, tempNode, tempNode * 2);
+                        tempNode = tempNode * 2;
+                    } else {
+                        swap(tempArray, tempNode, (tempNode * 2) + 1);
+                        tempNode = (tempNode * 2) + 1;
+                    }
+
+
+                    // case for if only left child exists
+                } else {
+                    swap(tempArray, tempNode, tempNode * 2);
+                }
+            }
+
+            a.add(tempArray.remove(tempNode));
+            System.out.println("subtracting: " + right);
+            right--;
+        }
     }
 
     public static <T extends Comparable> void heapify (ArrayList<T> a, int left, int right) {
         // TODO: Finish Me
+        // declarations
+        int mid;
+        int tempNode;
+
+        // find "middle" value
+        mid = right / 2;
+
+        // from "middle", percolate down
+        for(int i = mid; i > left; i--) {
+            tempNode = i;
+            while((tempNode * 2) <= right) {
+                // case for if both children exist
+                if((tempNode * 2) < right) {
+                    if(a.get(tempNode * 2).compareTo(a.get((tempNode * 2) + 1)) >= 0) {
+                        if(a.get(tempNode * 2).compareTo(a.get(tempNode)) > 0) {
+                            swap(a, tempNode, tempNode * 2);
+                            tempNode = tempNode * 2;
+                        } else {
+                            break;
+                        }
+                    } else {
+                        if(a.get(tempNode * 2).compareTo(a.get(tempNode)) > 0) {
+                            swap(a, tempNode, (tempNode * 2) + 1);
+                            tempNode = (tempNode * 2) + 1;
+                        } else {
+                            break;
+                        }
+                    }
 
 
+                // case for if only left child exists
+                } else {
+                    if(a.get(tempNode * 2).compareTo(a.get(tempNode)) > 0) {
+                        swap(a, tempNode, tempNode * 2);
+                        tempNode = tempNode * 2;
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     // Bubble Sort | FINISHED
@@ -177,7 +251,7 @@ public class Proj3 {
         return swapCounter;
     }
 
-    // Odd-Even Transposition Sort
+    // Odd-Even Transposition Sort | FINISHED
     public static <T extends Comparable> int transpositionSort(ArrayList<T> a, int size) {
         boolean hasSwapped = true;
         int swapCounter = 0;
@@ -194,9 +268,9 @@ public class Proj3 {
                     hasSwapped = true;
                     swap(a, i, i + 1);
                 }
-
-                swapCounter++;
             }
+
+            swapCounter++;
 
             // inner loop for even elements
             for(int i = 1; i < size - 1; i += 2) {
@@ -206,16 +280,17 @@ public class Proj3 {
                     hasSwapped = true;
                     swap(a, i, i + 1);
                 }
-
-                swapCounter++;
             }
+
+            swapCounter++;
         }
 
         return swapCounter;
     }
 
     public static void main(String [] args)  throws IOException {
-        // TODO: remove test code
+        // TODO: finish proper implementation
+        // TODO: delete test code
 
         ArrayList<Catcher> listToSort;
         long startTime;
@@ -289,6 +364,12 @@ public class Proj3 {
         Collections.shuffle(listToSort);
 
         quickSort(listToSort, 0, listToSort.size() - 1);
+
+        System.out.println(listToSort.toString());
+
+        Collections.shuffle(listToSort);
+
+        heapSort(listToSort, 0, listToSort.size() - 1);
 
         System.out.println(listToSort.toString());
 
