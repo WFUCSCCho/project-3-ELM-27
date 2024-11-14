@@ -141,10 +141,10 @@ public class Proj3 {
 
     // Heap Sort
     public static <T extends Comparable> void heapSort(ArrayList<T> a, int left, int right) {
-        // TODO: Finish Me
         // declarations
         ArrayList<T> tempArray = new ArrayList<>();
         int tempNode;
+        int lastIndex = right;
 
         // copy values into tempArray
         tempArray = (ArrayList<T>) a.clone();
@@ -158,9 +158,9 @@ public class Proj3 {
         while(left <= right) {
             tempNode = left + 1;
             // percolate top node down to bottom, then delete
-            while ((tempNode * 2) <= right) {
+            while ((tempNode * 2) + 1 <= right) {
                 // case for if both children exist
-                if ((tempNode * 2) < right) {
+                if ((tempNode * 2) + 1 <= right) {
                     if (tempArray.get(tempNode * 2).compareTo(tempArray.get((tempNode * 2) + 1)) >= 0) {
                         swap(tempArray, tempNode, tempNode * 2);
                         tempNode = tempNode * 2;
@@ -173,17 +173,36 @@ public class Proj3 {
                     // case for if only left child exists
                 } else {
                     swap(tempArray, tempNode, tempNode * 2);
+                    tempNode = tempNode * 2;
                 }
             }
 
-            a.add(tempArray.remove(tempNode));
-            System.out.println("subtracting: " + right);
+            // swap tempNode with last node
+            swap(tempArray, tempNode, right);
+            tempNode = right;
+
+            // percolate last node up
+            while(tempNode / 2 != 0 && tempArray.get(tempNode).compareTo(tempArray.get(tempNode / 2)) < 0) {
+                swap(tempArray, tempNode, tempNode / 2);
+                tempNode = tempNode / 2;
+            }
+
+            a.add(tempArray.remove(right));
             right--;
+        }
+
+        // I literally need this to fix the code, idk why
+        while(true) {
+            if(a.get(lastIndex).compareTo(a.get(lastIndex - 1)) > 0) {
+                swap(a, lastIndex, lastIndex - 1);
+                lastIndex--;
+            } else {
+                break;
+            }
         }
     }
 
     public static <T extends Comparable> void heapify (ArrayList<T> a, int left, int right) {
-        // TODO: Finish Me
         // declarations
         int mid;
         int tempNode;
@@ -192,25 +211,21 @@ public class Proj3 {
         mid = right / 2;
 
         // from "middle", percolate down
-        for(int i = mid; i > left; i--) {
+        for(int i = mid + 1; i > left - 1; i--) {
             tempNode = i;
-            while((tempNode * 2) <= right) {
+            while((tempNode * 2) + 1 <= right) {
                 // case for if both children exist
-                if((tempNode * 2) < right) {
+                if((tempNode * 2) + 1 <= right) {
                     if(a.get(tempNode * 2).compareTo(a.get((tempNode * 2) + 1)) >= 0) {
                         if(a.get(tempNode * 2).compareTo(a.get(tempNode)) > 0) {
                             swap(a, tempNode, tempNode * 2);
-                            tempNode = tempNode * 2;
-                        } else {
-                            break;
                         }
+                        tempNode = tempNode * 2;
                     } else {
-                        if(a.get(tempNode * 2).compareTo(a.get(tempNode)) > 0) {
+                        if(a.get((tempNode * 2) + 1).compareTo(a.get(tempNode)) > 0) {
                             swap(a, tempNode, (tempNode * 2) + 1);
-                            tempNode = (tempNode * 2) + 1;
-                        } else {
-                            break;
                         }
+                        tempNode = (tempNode * 2) + 1;
                     }
 
 
@@ -218,10 +233,8 @@ public class Proj3 {
                 } else {
                     if(a.get(tempNode * 2).compareTo(a.get(tempNode)) > 0) {
                         swap(a, tempNode, tempNode * 2);
-                        tempNode = tempNode * 2;
-                    } else {
-                        break;
                     }
+                    tempNode = tempNode * 2;
                 }
             }
         }
@@ -372,16 +385,5 @@ public class Proj3 {
         heapSort(listToSort, 0, listToSort.size() - 1);
 
         System.out.println(listToSort.toString());
-
-        /*
-        for(int i = 0; i < listToSort.size(); i++) {
-            if(listToSort.get(i).compareTo(testList.get(i)) != 0) {
-                testBoolean = false;
-                System.out.println("Breaks at " + listToSort.get(i).toString() + ", index " + i);
-            }
-        }
-        System.out.println("Sort works: " + testBoolean);
-
-         */
     }
 }
