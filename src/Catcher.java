@@ -107,15 +107,10 @@ public class Catcher implements Comparable<Catcher> {
     // used only when a Catcher object is being printed
     @Override
     public String toString() {
-        // TODO: Fix this
-        /*
         String returnString = "Username: " + username;
         returnString = returnString.concat(", User ID: " + userID);
         returnString = returnString.concat(", Skill: " + skill);
         returnString = returnString.concat(", Title: " + title);
-
-         */
-        String returnString = "" + skill;
         return returnString;
     }
 

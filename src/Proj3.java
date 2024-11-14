@@ -1,4 +1,5 @@
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -193,7 +194,7 @@ public class Proj3 {
 
         // I literally need this to fix the code, idk why
         while(true) {
-            if(a.get(lastIndex).compareTo(a.get(lastIndex - 1)) > 0) {
+            if(lastIndex > 0 && a.get(lastIndex).compareTo(a.get(lastIndex - 1)) > 0) {
                 swap(a, lastIndex, lastIndex - 1);
                 lastIndex--;
             } else {
@@ -303,7 +304,6 @@ public class Proj3 {
 
     public static void main(String [] args)  throws IOException {
         // TODO: finish proper implementation
-        // TODO: delete test code
 
         ArrayList<Catcher> listToSort;
         long startTime;
@@ -313,17 +313,12 @@ public class Proj3 {
         int linesToRead;
         int swapCount;
 
-        boolean testBoolean = true;
-        ArrayList<Catcher> testList;
-
         listToSort  = new ArrayList<>();
-
-        testList = new ArrayList<>();
 
 
         // check for correct args count
         if (args.length != 3) {
-            System.err.println("Usage: java TestAvl <input file> <number of lines>");
+            System.err.println("Usage: java Proj3 <database file> <algorithm type (as named in method names)> <number of lines>");
             System.exit(1);
         }
 
@@ -347,43 +342,192 @@ public class Proj3 {
             listToSort.add(new Catcher(inputFileNameScanner.nextLine()));
         }
 
-        testList = (ArrayList<Catcher>) listToSort.clone();
+        clearOutFile("sorted.txt");
 
-        // test line
-        Collections.sort(testList, Collections.reverseOrder());
-        System.out.println(listToSort.toString());
+        if(algorithmType.equals("bubbleSort")) {
+            writeToFile("bubbleSort", "analysis.txt");
+            writeToFile(listToSort.size() + "", "analysis.txt");
 
-        Collections.shuffle(listToSort);
+            System.out.println("bubbleSort with " + listToSort.size() + " items.");
 
-        // insert test sorting algorithm below
-        swapCount = bubbleSort(listToSort, linesToRead);
+            // sorted
+            Collections.sort(listToSort, Collections.reverseOrder());
+            swapCount = bubbleSort(listToSort, listToSort.size());
+            writeFullList(listToSort, "sorted.txt");
+            writeToFile(swapCount + "", "analysis.txt");
+            System.out.println("Sorted: " + swapCount + " swaps.");
 
-        System.out.print(swapCount + " swaps, ");
-        System.out.println(listToSort.toString());
+            // shuffled
+            Collections.shuffle(listToSort);
+            swapCount = bubbleSort(listToSort, listToSort.size());
+            writeFullList(listToSort, "sorted.txt");
+            writeToFile(swapCount + "", "analysis.txt");
+            System.out.println("Shuffled: " + swapCount + " swaps.");
 
-        Collections.shuffle(listToSort);
+            // reversed
+            Collections.sort(listToSort);
+            swapCount = bubbleSort(listToSort, listToSort.size());
+            writeFullList(listToSort, "sorted.txt");
+            fileNewLine(swapCount + "", "analysis.txt");
+            System.out.println("Reversed: " + swapCount + " swaps.");
 
-        swapCount = transpositionSort(listToSort, linesToRead);
+        } else if(algorithmType.equals("transpositionSort")) {
+            writeToFile("transpositionSort", "analysis.txt");
+            writeToFile(listToSort.size() + "", "analysis.txt");
 
-        System.out.print(swapCount + " swaps, ");
-        System.out.println(listToSort.toString());
+            System.out.println("transpositionSort with " + listToSort.size() + " items.");
 
-        Collections.shuffle(listToSort);
+            // sorted
+            Collections.sort(listToSort, Collections.reverseOrder());
+            swapCount = transpositionSort(listToSort, listToSort.size());
+            writeFullList(listToSort, "sorted.txt");
+            writeToFile(swapCount + "", "analysis.txt");
+            System.out.println("Sorted: " + swapCount + " swaps.");
 
-        mergeSort(listToSort, 0, listToSort.size() - 1);
+            // shuffled
+            Collections.shuffle(listToSort);
+            swapCount = transpositionSort(listToSort, listToSort.size());
+            writeFullList(listToSort, "sorted.txt");
+            writeToFile(swapCount + "", "analysis.txt");
+            System.out.println("Shuffled: " + swapCount + " swaps.");
 
-        System.out.println(listToSort.toString());
+            // reversed
+            Collections.sort(listToSort);
+            swapCount = transpositionSort(listToSort, listToSort.size());
+            writeFullList(listToSort, "sorted.txt");
+            fileNewLine(swapCount + "", "analysis.txt");
+            System.out.println("Reversed: " + swapCount + " swaps.");
+        } else if(algorithmType.equals("heapSort")) {
+            writeToFile("heapSort", "analysis.txt");
+            writeToFile(listToSort.size() + "", "analysis.txt");
 
-        Collections.shuffle(listToSort);
+            System.out.println("heapSort with " + listToSort.size() + " items.");
 
-        quickSort(listToSort, 0, listToSort.size() - 1);
+            // sorted
+            Collections.sort(listToSort);
+            startTime = System.nanoTime();
+            heapSort(listToSort, 0, listToSort.size() - 1);
+            endTime = System.nanoTime();
+            writeFullList(listToSort, "sorted.txt");
+            writeToFile((endTime - startTime) + "", "analysis.txt");
+            System.out.println("Sorted: " + (endTime - startTime) + " nanoseconds.");
 
-        System.out.println(listToSort.toString());
+            // shuffled
+            Collections.shuffle(listToSort);
+            startTime = System.nanoTime();
+            heapSort(listToSort, 0, listToSort.size() - 1);
+            endTime = System.nanoTime();
+            writeFullList(listToSort, "sorted.txt");
+            writeToFile((endTime - startTime) + "", "analysis.txt");
+            System.out.println("Sorted: " + (endTime - startTime) + " nanoseconds.");
 
-        Collections.shuffle(listToSort);
+            // reversed
+            Collections.sort(listToSort, Collections.reverseOrder());
+            startTime = System.nanoTime();
+            heapSort(listToSort, 0, listToSort.size() - 1);
+            endTime = System.nanoTime();
+            writeFullList(listToSort, "sorted.txt");
+            fileNewLine((endTime - startTime) + "", "analysis.txt");
+            System.out.println("Sorted: " + (endTime - startTime) + " nanoseconds.");
+        } else if(algorithmType.equals("mergeSort")) {
+            writeToFile("mergeSort", "analysis.txt");
+            writeToFile(listToSort.size() + "", "analysis.txt");
 
-        heapSort(listToSort, 0, listToSort.size() - 1);
+            System.out.println("mergeSort with " + listToSort.size() + " items.");
 
-        System.out.println(listToSort.toString());
+            // sorted
+            Collections.sort(listToSort);
+            startTime = System.nanoTime();
+            mergeSort(listToSort, 0, listToSort.size() - 1);
+            endTime = System.nanoTime();
+            writeFullList(listToSort, "sorted.txt");
+            writeToFile((endTime - startTime) + "", "analysis.txt");
+            System.out.println("Sorted: " + (endTime - startTime) + " nanoseconds.");
+
+            // shuffled
+            Collections.shuffle(listToSort);
+            startTime = System.nanoTime();
+            mergeSort(listToSort, 0, listToSort.size() - 1);
+            endTime = System.nanoTime();
+            writeFullList(listToSort, "sorted.txt");
+            writeToFile((endTime - startTime) + "", "analysis.txt");
+            System.out.println("Sorted: " + (endTime - startTime) + " nanoseconds.");
+
+            // reversed
+            Collections.sort(listToSort, Collections.reverseOrder());
+            startTime = System.nanoTime();
+            mergeSort(listToSort, 0, listToSort.size() - 1);
+            endTime = System.nanoTime();
+            writeFullList(listToSort, "sorted.txt");
+            fileNewLine((endTime - startTime) + "", "analysis.txt");
+            System.out.println("Sorted: " + (endTime - startTime) + " nanoseconds.");
+        } else if(algorithmType.equals("quickSort")) {
+            writeToFile("quickSort", "analysis.txt");
+            writeToFile(listToSort.size() + "", "analysis.txt");
+
+            System.out.println("quickSort with " + listToSort.size() + " items.");
+
+            // sorted
+            Collections.sort(listToSort);
+            startTime = System.nanoTime();
+            quickSort(listToSort, 0, listToSort.size() - 1);
+            endTime = System.nanoTime();
+            writeFullList(listToSort, "sorted.txt");
+            writeToFile((endTime - startTime) + "", "analysis.txt");
+            System.out.println("Sorted: " + (endTime - startTime) + " nanoseconds.");
+
+            // shuffled
+            Collections.shuffle(listToSort);
+            startTime = System.nanoTime();
+            quickSort(listToSort, 0, listToSort.size() - 1);
+            endTime = System.nanoTime();
+            writeFullList(listToSort, "sorted.txt");
+            writeToFile((endTime - startTime) + "", "analysis.txt");
+            System.out.println("Sorted: " + (endTime - startTime) + " nanoseconds.");
+
+            // reversed
+            Collections.sort(listToSort, Collections.reverseOrder());
+            startTime = System.nanoTime();
+            quickSort(listToSort, 0, listToSort.size() - 1);
+            endTime = System.nanoTime();
+            writeFullList(listToSort, "sorted.txt");
+            fileNewLine((endTime - startTime) + "", "analysis.txt");
+            System.out.println("Sorted: " + (endTime - startTime) + " nanoseconds.");
+        } else {
+            System.out.println("not an algorithm type");
+            System.exit(1);
+        }
+    }
+
+    public static void writeToFile(String content, String filePath) throws IOException {
+        FileWriter outFile = new FileWriter(filePath, true);  // navigates to end of file
+
+        outFile.write(content + ",");
+
+        outFile.close();
+    }
+
+    public static void clearOutFile(String filePath) throws IOException{
+        FileWriter outFile = new FileWriter(filePath);
+
+        outFile.write("");
+
+        outFile.close();
+    }
+
+    public static <T extends Comparable> void writeFullList(ArrayList<T> a, String filePath) throws IOException {
+        FileWriter outFile = new FileWriter(filePath, true);  // navigates to end of file
+
+        outFile.write(a.toString() + "\n");
+
+        outFile.close();
+    }
+
+    public static void fileNewLine(String content, String filePath) throws IOException {
+        FileWriter outFile = new FileWriter(filePath, true);  // navigates to end of file
+
+        outFile.write(content + "\n");
+
+        outFile.close();
     }
 }
