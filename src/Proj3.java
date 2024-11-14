@@ -9,23 +9,26 @@ public class Proj3 {
     // Sorting Method declarations
     // Merge Sort
     public static <T extends Comparable> void mergeSort(ArrayList<T> a, int left, int right) {
-        // TODO: Finish Me
         int difference;
         int mid;
 
+        // determine sub-arrays
         difference = right - left;
         mid = (difference / 2) + left;
 
+        // ensures size doesn't equal 1
         if(difference != 0) {
+
+            // mergeSort sub-arrays
             mergeSort(a, left, mid);
             mergeSort(a, mid + 1, right);
         }
 
+        // merges sub-arrays
         merge(a, left, mid, right);
     }
 
     public static <T extends Comparable> void merge(ArrayList<T> a, int left, int mid, int right) {
-        // TODO: Finish Me
         // create two partitions
         ArrayList<T> leftArray = new ArrayList<>();
         ArrayList<T> rightArray = new ArrayList<>();
@@ -95,19 +98,37 @@ public class Proj3 {
         rightIndex = right;
         leftIndex = left;
 
-        if(pivot <= left) return pivot;
+        if(right == left) return pivot;
 
         // sort into two partitions
         swap(a, pivot, right);
+        pivot = right;
+
+        /*
+         *  Strategy: send pivot to back of the segment
+         *            if a value is greater than the pivot, move on to next value
+         *            if a value is less than the pivot, do three things:
+         *                  first:  swap pivot with the item before the pivot
+         *                  second: swap item that was before the pivot with the item compared previously
+         *                  third:  stay on the same index (since the value has changed)
+         */
         for(int i = left; i < pivot; i++) {
+            // if value is greater
             if(a.get(i).compareTo(a.get(pivot)) >= 0) {
-                swap(a, leftIndex, i);
                 leftIndex++;
             } else {
-                swap(a, i, rightIndex);
+                // if value is less
+                swap(a, pivot, pivot - 1);
+
+                // ensures the pivot isn't swapped again
+                if(pivot != leftIndex + 1) {
+                    swap(a, i, rightIndex);
+                }
+
                 rightIndex--;
                 i--;
                 pivot--;
+
             }
         }
 
@@ -271,6 +292,7 @@ public class Proj3 {
 
         System.out.println(listToSort.toString());
 
+        /*
         for(int i = 0; i < listToSort.size(); i++) {
             if(listToSort.get(i).compareTo(testList.get(i)) != 0) {
                 testBoolean = false;
@@ -278,5 +300,7 @@ public class Proj3 {
             }
         }
         System.out.println("Sort works: " + testBoolean);
+
+         */
     }
 }
