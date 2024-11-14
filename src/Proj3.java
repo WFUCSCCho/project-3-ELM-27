@@ -68,12 +68,50 @@ public class Proj3 {
     // Quick Sort
     public static <T extends Comparable> void quickSort(ArrayList<T> a, int left, int right) {
         // TODO: Finish Me
+        // definitions
+        int partition;
+
+        // ensures the method ends
+        if(right - left > 0) {
+
+            // call partition, get pivot from return
+            partition = partition(a, left, right);
+
+            // call quickSort on left, pivot - 1 and on pivot + 1, right
+            if(partition != left) quickSort(a, left, partition - 1);
+            if(partition != right) quickSort(a, partition + 1, right);
+        }
     }
 
     public static <T extends Comparable> int partition (ArrayList<T> a, int left, int right) {
-        // TODO: Finish Me
+        // TODO: Fix issue in result
+        // definitions
+        int pivot;
+        int rightIndex;
+        int leftIndex;
 
-        return 0;
+        // choose "random" pivot (center is chosen since largest value will likely not be in the center for our cases
+        pivot = ((right - left ) / 2) + left;
+        rightIndex = right;
+        leftIndex = left;
+
+        if(pivot <= left) return pivot;
+
+        // sort into two partitions
+        swap(a, pivot, right);
+        for(int i = left; i < pivot; i++) {
+            if(a.get(i).compareTo(a.get(pivot)) >= 0) {
+                swap(a, leftIndex, i);
+                leftIndex++;
+            } else {
+                swap(a, i, rightIndex);
+                rightIndex--;
+                i--;
+                pivot--;
+            }
+        }
+
+        return pivot;
     }
 
     static <T> void swap(ArrayList<T> a, int i, int j) {
@@ -224,6 +262,12 @@ public class Proj3 {
         Collections.shuffle(listToSort);
 
         mergeSort(listToSort, 0, listToSort.size() - 1);
+
+        System.out.println(listToSort.toString());
+
+        Collections.shuffle(listToSort);
+
+        quickSort(listToSort, 0, listToSort.size() - 1);
 
         System.out.println(listToSort.toString());
 
